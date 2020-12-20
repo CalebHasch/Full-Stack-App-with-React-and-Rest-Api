@@ -13,7 +13,6 @@ export default class Courses extends Component {
       .then((data) => {
         if (data) {
           this.setState({ courses: data });
-          console.log(data);
         }
       })
   }

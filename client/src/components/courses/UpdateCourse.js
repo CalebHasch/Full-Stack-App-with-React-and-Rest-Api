@@ -146,7 +146,7 @@ export default class UpdateCourse extends Component {
       materialsNeeded,
       userId,
     };
-    
+    console.log(course);
     context.data.updateCourse(course, courseId, emailAddress, password)
       .then( errors => {
         if (errors.length) {
@@ -158,7 +158,7 @@ export default class UpdateCourse extends Component {
       })
       .catch( err => {
         console.log(err);
-        this.props.history.push('/error');
+        //this.props.history.push('/error');
       });
   }
 
