@@ -14,6 +14,7 @@ import UpdateCourse from './components/courses/UpdateCourse';
 import UserSignIn from './components/users/UserSignIn';
 import UserSignUp from './components/users/UserSignUp';
 import UserSignOut from './components/users/UserSignOut';
+import UnhandledError from './components/UnhandledError';
 
 import withContext from './Context';
 
@@ -25,6 +26,7 @@ const UpdateCourseWithContext = withContext(UpdateCourse);
 const UserSignUpWithContext = withContext(UserSignUp);
 const UserSignInWithContext = withContext(UserSignIn);
 const UserSignOutWithContext = withContext(UserSignOut);
+const UnhandledErrorWithContext = withContext(UnhandledError);
 
 export default () => (
   <Router>
@@ -39,6 +41,7 @@ export default () => (
         <Route path="/courses/:id/update" component={UpdateCourseWithContext} />
         <Route path="/courses/create" component={CreateCourseWithContext} />
         <Route path="/courses/:id" component={CourseDetailWithContext} />
+        <Route path="/error" component={UnhandledErrorWithContext} />
       </Switch>
     </div>
   </Router>
