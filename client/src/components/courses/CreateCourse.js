@@ -7,7 +7,17 @@ export default class CreateCourse extends Component {
     description: '',
     estimatedTime: '',
     materialsNeeded: '',
+    firstName:'',
+    lastName:'',
     errors: [],
+  }
+
+  componentDidMount() {
+    const { context } = this.props;
+    this.setState({
+      firstName: context.authenticatedUser.firstName,
+      lastName: context.authenticatedUser.lastName
+    })
   }
 
   render() {
@@ -16,6 +26,8 @@ export default class CreateCourse extends Component {
       description,
       estimatedTime,
       materialsNeeded,
+      firstName,
+      lastName,
       errors,
     } = this.state;
 
@@ -23,6 +35,7 @@ export default class CreateCourse extends Component {
       <div className="bounds course--detail">
         <h1>Create Course</h1>
         <Form
+          errors = {errors}
           cancel= {this.cancel}
           submit = {this.submit}
           submitButtonText= "Create Course"
@@ -38,15 +51,18 @@ export default class CreateCourse extends Component {
                     type="text" 
                     className="input-title course--title--input" 
                     placeholder="Course title..."
-                    value="" />
+                    onChange={this.change}
+                    value={title} />
                     </div>
-                  <p>By Joe Smith</p>
+                  <p>By {firstName} {lastName}</p>
                 </div>
                 <div className="course--description">
                   <div>
                     <textarea 
                     id="description" 
-                    name="description" 
+                    name="description"
+                    onChange={this.change}
+                    value={description} 
                     placeholder="Course description...">
                     </textarea>
                   </div>
@@ -64,16 +80,19 @@ export default class CreateCourse extends Component {
                         type="text" 
                         className="course--time--input"
                         placeholder="Hours" 
-                        value="" />
+                        onChange={this.change}
+                        value={estimatedTime} />
                       </div>
                     </li>
                     <li className="course--stats--list--item">
                       <h4>Materials Needed</h4>
                       <div>
                         <textarea 
-                        id="materialsNeeded" 
-                        name="materialsNeeded" 
-                        placeholder="List materials...">
+                          id="materialsNeeded" 
+                          name="materialsNeeded" 
+                          onChange={this.change}
+                          value={materialsNeeded}
+                          placeholder="List materials...">
                         </textarea>
                       </div>
                     </li>
@@ -98,7 +117,38 @@ export default class CreateCourse extends Component {
   }
 
   submit = () => {
-    console.log('Update success');
+    const { context } = this.props;
+    const userId = context.authenticatedUser.id;
+    const emailAddress = context.authenticatedUser.email;
+    const password = context.authenticatedUser.password;
+    const {
+      title,
+      description,
+      estimatedTime,
+      materialsNeeded,
+    } = this.state;
+
+    const course = {
+      title,
+      description,
+      estimatedTime,
+      materialsNeeded,
+      userId,
+    };
+
+    context.data.createCourse(course, emailAddress, password)
+      .then( errors => {
+        if (errors.length) {
+          this.setState({ errors });
+        } else {
+          this.props.history.push('/');
+          console.log('create success');
+        }
+      })
+      .catch( err => {
+        console.log(err);
+        this.props.history.push('/error');
+      });
   }
 
   cancel = () => {

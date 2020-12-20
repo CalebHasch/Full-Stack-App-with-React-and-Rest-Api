@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
 import ReactMarkDown from 'react-markdown';
 import { Link } from 'react-router-dom';
 
@@ -21,20 +20,23 @@ export default class CourseDetail extends Component {
         if (data) {
           this.setState({ course });
           this.setState({ user });
-          console.log(course);
-          console.log(user);
         }
       })
   }
 
   render() {
+    const {
+      course,
+      user,
+    } = this.state;
+
     return(
       <div>
         <div className="actions--bar">
           <div className="bounds">
             <div className="grid-100">
-              <Link className="button" to="/updatecourse">Update Course</Link>
-              <Link className="button" to="#">Delete Course</Link>
+              <Link className="button" to={`/courses/${course.id}/update`}>Update Course</Link>
+              <button className="button" to="/" onClick={this.deleteCourse}>Delete Course</button>
               <Link className="button button-secondary" to="/">Return to List</Link>
             </div>
           </div>
@@ -70,4 +72,14 @@ export default class CourseDetail extends Component {
       </div>
     )
   }
+
+  deleteCourse = () => {
+    const { context } = this.props;
+    const courseId = this.state.course.id;
+    const emailAddress = context.authenticatedUser.email;
+    const password = context.authenticatedUser.password;
+    
+    context.data.deleteCourse( courseId, emailAddress, password)
+      .then((res) => (window.location.href = '/'));
+  };
 }

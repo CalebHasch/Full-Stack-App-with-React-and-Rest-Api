@@ -7,7 +7,25 @@ export default class UpdateCourse extends Component {
     description: '',
     estimatedTime: '',
     materialsNeeded: '',
+    course: [],
+    user: [],
     errors: [],
+  }
+
+  componentDidMount() {
+    const { context } = this.props;
+    const id = this.props.match.params.id;
+    context.data
+      .getCourseDetails(id)
+      .then((data) => {
+        const course = data;
+        const user = data.User;
+
+        if (data) {
+          this.setState({ course });
+          this.setState({ user });
+        }
+      })
   }
 
   render() {
@@ -16,6 +34,8 @@ export default class UpdateCourse extends Component {
       description,
       estimatedTime,
       materialsNeeded,
+      course,
+      user,
       errors,
     } = this.state;
 
@@ -24,6 +44,7 @@ export default class UpdateCourse extends Component {
         <h1>Update Course</h1>
         <div>
           <Form
+            errors = {errors}
             cancel={this.cancel}
             submit={this.submit}
             submitButtonText="Update Course"
@@ -42,7 +63,7 @@ export default class UpdateCourse extends Component {
                         className="input-title course--title--input" 
                         placeholder="Course title..." />                        
                     </div>
-                    <p>By Joe Smith</p>
+                    <p>By {this.state.user.firstName} {this.state.user.lastName}</p>
                   </div>
                   <div className="course--description">
                     <div>
@@ -51,17 +72,8 @@ export default class UpdateCourse extends Component {
                       name="description" 
                       value={description}
                       onChange={this.change} 
-                      placeholder="Course description...">High-end furniture projects are great to dream about. But unless you have a well-equipped shop and some serious woodworking experience to draw on, it can be difficult to turn the dream into a reality.
-
-    Not every piece of furniture needs to be a museum showpiece, though. Often a simple design does the job just as well and the experience gained in completing it goes a long way toward making the next project even better.
-
-    Our pine bookcase, for example, features simple construction and it's designed to be built with basic woodworking tools. Yet, the finished project is a worthy and useful addition to any room of the house. While it's meant to rest on the floor, you can convert the bookcase to a wall-mounted storage unit by leaving off the baseboard. You can secure the cabinet to the wall by screwing through the cabinet cleats into the wall studs.
-
-    We made the case out of materials available at most building-supply dealers and lumberyards, including 1/2 x 3/4-in. parting strip, 1 x 2, 1 x 4 and 1 x 10 common pine and 1/4-in.-thick lauan plywood. Assembly is quick and easy with glue and nails, and when you're done with construction you have the option of a painted or clear finish.
-
-    As for basic tools, you'll need a portable circular saw, hammer, block plane, combination square, tape measure, metal rule, two clamps, nail set and putty knife. Other supplies include glue, nails, sandpaper, wood filler and varnish or paint and shellac.
-
-    The specifications that follow will produce a bookcase with overall dimensions of 10 3/4 in. deep x 34 in. wide x 48 in. tall. While the depth of the case is directly tied to the 1 x 10 stock, you can vary the height, width and shelf spacing to suit your needs. Keep in mind, though, that extending the width of the cabinet may require the addition of central shelf supports.</textarea>
+                      placeholder="Course description...">
+                      </textarea>
                   </div>
                 </div>
               </div>
@@ -90,16 +102,6 @@ export default class UpdateCourse extends Component {
                         value={materialsNeeded}
                         onChange={this.change}
                         placeholder="List materials...">
-                          * 1/2 x 3/4 inch parting strip
-                          * 1 x 2 common pine
-                          * 1 x 4 common pine
-                          * 1 x 10 common pine
-                          * 1/4 inch thick lauan plywood
-                          * Finishing Nails
-                          * Sandpaper
-                          * Wood Glue
-                          * Wood Filler
-                          * Minwax Oil Based Polyurethane
                         </textarea>
                       </div>
                     </li>
@@ -125,10 +127,42 @@ export default class UpdateCourse extends Component {
   }
 
   submit = () => {
-    console.log('Update success');
+    const { context } = this.props;
+    const userId = context.authenticatedUser.id;
+    const courseId = this.state.course.id;
+    const emailAddress = context.authenticatedUser.email;
+    const password = context.authenticatedUser.password;
+    const {
+      title,
+      description,
+      estimatedTime,
+      materialsNeeded,
+    } = this.state;
+
+    const course = {
+      title,
+      description,
+      estimatedTime,
+      materialsNeeded,
+      userId,
+    };
+    
+    context.data.updateCourse(course, courseId, emailAddress, password)
+      .then( errors => {
+        if (errors.length) {
+          this.setState({ errors });
+        } else {
+          this.props.history.push(`/courses/${courseId}`);
+          console.log('Update success');
+        }
+      })
+      .catch( err => {
+        console.log(err);
+        this.props.history.push('/error');
+      });
   }
 
   cancel = () => {
-    this.props.history.push('/coursedetail');
+    this.props.history.push(`/courses/${this.state.course.id}`);
   }
 }
