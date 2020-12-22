@@ -55,7 +55,9 @@ export default class CourseDetail extends Component {
               <p>By {user.firstName} {user.lastName}</p>
             </div>
             <div className="course--description">
-              <p>{course.description}</p>
+              <ReactMarkDown 
+              source={course.description}
+              />
             </div>
           </div>
           <div className="grid-25 grid-right">

@@ -32,6 +32,8 @@ export default class Data {
       return response.json().then(data => {
         return data.errors;
       });
+    } else if (response.status === 500) {
+      return this.props.history.push('/error');
     } else {
       throw new Error();
     }
@@ -43,6 +45,8 @@ export default class Data {
       return response.json().then((data) => data);
     } else if (response.status === 401) {
       return null;
+    } else if (response.status === 500) {
+      return this.props.history.push('/error');
     } else {
       throw new Error();
     }
@@ -54,6 +58,8 @@ export default class Data {
       return response.json().then(data => data);
     } else if (response.status === 401) {
       return null;
+    } else if (response.status === 500) {
+      return this.props.history.push('/error');
     } else {
       throw new Error();
     }
@@ -65,6 +71,8 @@ export default class Data {
       return response.json().then(data => data);
     } else if (response.status === 401) {
       return null;
+    } else if (response.status === 500) {
+      return this.props.history.push('/error');
     } else {
       throw new Error();
     }
@@ -78,6 +86,8 @@ export default class Data {
       return response.json().then(data => {
         return data.errors;
       });
+    } else if (response.status === 500) {
+      return this.props.history.push('/error');
     } else {
       throw new Error();
     }
@@ -91,6 +101,8 @@ export default class Data {
       return response.json().then(data => {
         return data.errors;
       });
+    } else if (response.status === 500) {
+      return this.props.history.push('/error');
     } else {
       throw new Error();
     }
@@ -104,6 +116,8 @@ export default class Data {
       return response.json().then(data => {
         return data;
       });
+    } else if (response.status === 500) {
+      return this.props.history.push('/error');
     } else {
       throw new Error();
     }
