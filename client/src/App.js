@@ -31,7 +31,7 @@ const UserSignInWithContext = withContext(UserSignIn);
 const UserSignOutWithContext = withContext(UserSignOut);
 const UnhandledErrorWithContext = withContext(UnhandledError);
 
-export default () => (
+const App = () => (
   <Router>
     <div>
       <HeaderWithContext />
@@ -51,3 +51,5 @@ export default () => (
     </div>
   </Router>
 );
+
+export default App;

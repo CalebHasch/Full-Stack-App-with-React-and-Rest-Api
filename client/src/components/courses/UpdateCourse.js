@@ -22,6 +22,21 @@ export default class UpdateCourse extends Component {
 
         if (data) {
           const user = data.User;
+          const {
+            title,
+            description,
+            estimatedTime,
+            materialsNeeded,
+            userId,
+          } = course;
+
+          this.setState({
+            title,
+            description,
+            estimatedTime,
+            materialsNeeded,
+            userId,
+          });
 
           this.setState({ course });
           this.setState({ user });
