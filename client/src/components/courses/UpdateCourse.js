@@ -19,11 +19,18 @@ export default class UpdateCourse extends Component {
       .getCourseDetails(id)
       .then((data) => {
         const course = data;
-        const user = data.User;
 
         if (data) {
+          const user = data.User;
+
           this.setState({ course });
           this.setState({ user });
+
+          if (user.id !== context.authenticatedUser.id) {
+            this.props.history.push('/forbidden');
+          }
+        } else {
+          this.props.history.push('/notfound');
         }
       })
   }
@@ -34,7 +41,6 @@ export default class UpdateCourse extends Component {
       description,
       estimatedTime,
       materialsNeeded,
-      course,
       user,
       errors,
     } = this.state;
@@ -63,7 +69,7 @@ export default class UpdateCourse extends Component {
                         className="input-title course--title--input" 
                         placeholder="Course title..." />                        
                     </div>
-                    <p>By {this.state.user.firstName} {this.state.user.lastName}</p>
+                    <p>By {user.firstName} {user.lastName}</p>
                   </div>
                   <div className="course--description">
                     <div>

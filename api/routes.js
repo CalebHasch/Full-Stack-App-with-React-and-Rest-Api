@@ -106,15 +106,6 @@ router.put('/courses/:id', authenticateUser, asyncHandler(async (req, res) => {
   let error = [];
   
   try {
-    if (!req.body.title) {
-      error.push("Please provide a title.");
-    }
-    if (!req.body.description) {
-      error.push("Please provide a description.");
-    }
-    if (error.length > 0) {
-      res.status(400).json({ error });
-    }
     if (course) {
       if (user.id === course.userId) {
         await course.update(req.body);

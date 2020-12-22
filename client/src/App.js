@@ -15,8 +15,11 @@ import UserSignIn from './components/users/UserSignIn';
 import UserSignUp from './components/users/UserSignUp';
 import UserSignOut from './components/users/UserSignOut';
 import UnhandledError from './components/UnhandledError';
+import NotFound from './components/NotFound';
+import Forbidden from './components/Forbidden';
 
 import withContext from './Context';
+import PrivateRoute from './PrivateRoute';
 
 const HeaderWithContext = withContext(Header);
 const CourseDetailWithContext = withContext(CourseDetail);
@@ -38,10 +41,12 @@ export default () => (
         <Route path="/signup" component={UserSignUpWithContext} />
         <Route path="/signout" component={UserSignOutWithContext} />
         <Route exact path="/" component={CoursesWithContext} />
-        <Route path="/courses/:id/update" component={UpdateCourseWithContext} />
-        <Route path="/courses/create" component={CreateCourseWithContext} />
+        <PrivateRoute path="/courses/:id/update" component={UpdateCourseWithContext} />
+        <PrivateRoute path="/courses/create" component={CreateCourseWithContext} />
         <Route path="/courses/:id" component={CourseDetailWithContext} />
         <Route path="/error" component={UnhandledErrorWithContext} />
+        <Route path="/forbidden" component={Forbidden} />
+        <Route path="/notfound" component={NotFound} />
       </Switch>
     </div>
   </Router>

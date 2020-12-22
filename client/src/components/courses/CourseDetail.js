@@ -15,28 +15,34 @@ export default class CourseDetail extends Component {
       .getCourseDetails(id)
       .then((data) => {
         const course = data;
-        const user = data.User;
 
         if (data) {
+          const user = data.User;
+
           this.setState({ course });
           this.setState({ user });
+        } else {
+          this.props.history.push('/notfound');
         }
       })
   }
 
   render() {
-    const {
-      course,
-      user,
-    } = this.state;
+    const { context } = this.props;
+    const authUser = context.authenticatedUser;
+    const { course, user } = this.state;
 
     return(
       <div>
         <div className="actions--bar">
           <div className="bounds">
             <div className="grid-100">
-              <Link className="button" to={`/courses/${course.id}/update`}>Update Course</Link>
-              <button className="button" to="/" onClick={this.deleteCourse}>Delete Course</button>
+              {authUser && authUser.id === user.id &&
+                <Link className="button" to={`/courses/${course.id}/update`}>Update Course</Link>
+              }
+              {authUser && authUser.id === user.id &&
+                <button className="button" to="/" onClick={this.deleteCourse}>Delete Course</button>
+              }
               <Link className="button button-secondary" to="/">Return to List</Link>
             </div>
           </div>
@@ -45,11 +51,11 @@ export default class CourseDetail extends Component {
           <div className="grid-66">
             <div className="course--header">
               <h4 className="course--label">Course</h4>
-              <h3 className="course--title">{this.state.course.title}</h3>
-              <p>By {this.state.user.firstName} {this.state.user.lastName}</p>
+              <h3 className="course--title">{course.title}</h3>
+              <p>By {user.firstName} {user.lastName}</p>
             </div>
             <div className="course--description">
-              <p>{this.state.course.description}</p>
+              <p>{course.description}</p>
             </div>
           </div>
           <div className="grid-25 grid-right">
@@ -57,12 +63,12 @@ export default class CourseDetail extends Component {
               <ul className="course--stats--list">
                 <li className="course--stats--list--item">
                   <h4>Estimated Time</h4>
-                  <h3>{this.state.course.estimatedTime}</h3>
+                  <h3>{course.estimatedTime}</h3>
                 </li>
                 <li className="course--stats--list--item">
                   <h4>Materials Needed</h4>
                   <ReactMarkDown 
-                    source={this.state.course.materialsNeeded}
+                    source={course.materialsNeeded}
                   />
                 </li>
               </ul>
